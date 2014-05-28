@@ -64,7 +64,7 @@ class JetPlot : public edm::EDAnalyzer {
 
       // ----------member data ---------------------------
 
-      TH1D* jet_plot;
+      TH1D* jet_counter;
 };
 
 //
@@ -86,7 +86,7 @@ JetPlot::JetPlot(const edm::ParameterSet& iConfig)
     edm::Service<TFileService> fs;
 
     //makes the jet plot
-    jet_plot = fs->make<TH1D>("jets", "jets", 10, 0., 10);
+    jet_counter = fs->make<TH1D>("jetCounts", "jetCounts", 10, 0., 10);
 }
 
 
@@ -120,7 +120,7 @@ JetPlot::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     {
 	jet_number++;
     }
-    jet_plot->Fill(jet_number);
+    jet_counter->Fill(jet_number);
 }
 
 
