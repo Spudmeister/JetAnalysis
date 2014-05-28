@@ -29,6 +29,17 @@
 #include "FWCore/Framework/interface/MakerMacros.h"
 
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
+
+// GenJets
+#include "DataFormats/JetReco/interface/GenJet.h"
+
+// CMSSW
+#include "FWCore/ServiceRegistry/interface/Service.h" // edm::Service
+#include "CommonTools/UtilAlgos/interface/TFileService.h" // TFileService
+
+// Root Library
+#include "TH1D.h"
+
 //
 // class declaration
 //
@@ -52,6 +63,8 @@ class JetPlot : public edm::EDAnalyzer {
       virtual void endLuminosityBlock(edm::LuminosityBlock const&, edm::EventSetup const&);
 
       // ----------member data ---------------------------
+
+      TH1D* jet_plot;
 };
 
 //
@@ -68,15 +81,19 @@ class JetPlot : public edm::EDAnalyzer {
 JetPlot::JetPlot(const edm::ParameterSet& iConfig)
 
 {
-   //now do what ever initialization is needed
+    //now do what ever initialization is needed
+    // This allows us to make plots with file service
+    edm::Service<TFileService> fs;
 
+    //makes the jet plot
+    jet_plot = fs->make<TH1D>("jets", "jets", 10, 0., 10);
 }
 
 
 JetPlot::~JetPlot()
 {
  
-   // do anything here that needs to be done at desctruction time
+   // do anything here that needs to be done at destruction time
    // (e.g. close files, deallocate resources etc.)
 
 }
@@ -90,19 +107,20 @@ JetPlot::~JetPlot()
 void
 JetPlot::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
-   using namespace edm;
+    using namespace edm;
 
+    // gets jets
+    Handle<std::vector<reco::GenJet>> pIn;
+    iEvent.getByLabel("ak5GenJets", pIn);
 
+    // loops over events and fills plots
 
-#ifdef THIS_IS_AN_EVENT_EXAMPLE
-   Handle<ExampleData> pIn;
-   iEvent.getByLabel("example",pIn);
-#endif
-   
-#ifdef THIS_IS_AN_EVENTSETUP_EXAMPLE
-   ESHandle<SetupData> pSetup;
-   iSetup.get<SetupRecord>().get(pSetup);
-#endif
+    int jet_number = 0;
+    for(unsigned int i = 0; i < pIn->size(); ++i)
+    {
+	jet_number++;
+    }
+    jet_plot->Fill(jet_number);
 }
 
 
