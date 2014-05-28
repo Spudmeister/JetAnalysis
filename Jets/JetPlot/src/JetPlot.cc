@@ -63,8 +63,10 @@ class JetPlot : public edm::EDAnalyzer {
       virtual void endLuminosityBlock(edm::LuminosityBlock const&, edm::EventSetup const&);
 
       // ----------member data ---------------------------
-
+      
+      // make counter histogram and pt distrubtion histogram
       TH1D* jet_counter;
+      TH1D* jet_pt;
 };
 
 //
@@ -86,7 +88,8 @@ JetPlot::JetPlot(const edm::ParameterSet& iConfig)
     edm::Service<TFileService> fs;
 
     //makes the jet plot
-    jet_counter = fs->make<TH1D>("jetCounts", "jetCounts", 10, 0., 10);
+    jet_counter = fs->make<TH1D>("jetCounts", "jetCounts", 100, 0., 100);
+    jet_pt = fs->make<TH1D>("jetPt", "jetPt", 100, 0., 100);
 }
 
 
@@ -118,7 +121,12 @@ JetPlot::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     int jet_number = 0;
     for(unsigned int i = 0; i < pIn->size(); ++i)
     {
-	jet_number++;
+	reco::GenJet genjet = pIn->at(i);
+	if(genjet.pt() >= 20)
+    	{    
+	    jet_number++;
+    	    jet_pt->Fill(genjet.pt());
+        }
     }
     jet_counter->Fill(jet_number);
 }
