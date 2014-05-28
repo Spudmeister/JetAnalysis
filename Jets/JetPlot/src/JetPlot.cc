@@ -40,6 +40,9 @@
 // Root Library
 #include "TH1D.h"
 
+// CMath
+#include <cmath>
+
 //
 // class declaration
 //
@@ -64,9 +67,13 @@ class JetPlot : public edm::EDAnalyzer {
 
       // ----------member data ---------------------------
       
-      // make counter histogram and pt distrubtion histogram
+      // make counter histogram and pt distrubtion histograms for various criteria
       TH1D* jet_counter_under20;
       TH1D* jet_pt_under20;
+      TH1D* pt_abs_eta_under2p5;
+      TH1D* pt_abs_eta_over2p5;
+      TH1D* counter_abs_eta_under2p5;
+      TH1D* counter_abs_eta_over2p5;
 };
 
 //
@@ -87,9 +94,14 @@ JetPlot::JetPlot(const edm::ParameterSet& iConfig)
     // This allows us to make plots with file service
     edm::Service<TFileService> fs;
 
-    //makes the jet plot
+    //makes the jet plots
     jet_counter_under20 = fs->make<TH1D>("jetCounts", "jetCounts", 100, 0., 100);
     jet_pt_under20 = fs->make<TH1D>("jetPt", "jetPt", 100, 0., 100);
+    pt_abs_eta_under2p5 = fs->make<TH1D>("ptAbsEtaUnder2.5", "ptAbsEtaUnder2.5", 100, 0., 100);
+    pt_abs_eta_over2p5 = fs->make<TH1D>("ptAbsEtaOver2.5", "ptAbsEtaOver2.5", 100, 0., 100);
+    counter_abs_eta_under2p5 = fs->make<TH1D>("counterAbsEtaUnder2.5", "counterAbsEtaUnder2.5", 100, 0., 100);
+    counter_abs_eta_over2p5 = fs->make<TH1D>("counterAbsEtaOver2.5", "counterAbsEtaOver2.5", 100, 0., 100);
+
 }
 
 
@@ -118,17 +130,31 @@ JetPlot::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 
     // loops over events and fills plots
 
-    int jet_number = 0;
+    int jet_number_eta_under2p5 = 0;
+    int jet_number_eta_over2p5 = 0;
+    int jet_number_under20 = 0;
     for(unsigned int i = 0; i < pIn->size(); ++i)
     {
 	reco::GenJet genjet = pIn->at(i);
+	if(fabs (genjet.eta()) > 2.5)
+        {
+            jet_number_eta_over2p5++;
+
+	}
+	else
+	{
+            jet_number_eta_under2p5++;
+
+	}
 	if(genjet.pt() >= 20)
     	{    
-	    jet_number++;
+	    jet_number_under20++;
     	    jet_pt_under20->Fill(genjet.pt());
         }
     }
-    jet_counter_under20->Fill(jet_number);
+    jet_counter_under20->Fill(jet_number_under20);
+    counter_abs_eta_under2p5->Fill(jet_number_eta_under2p5);
+    counter_abs_eta_over2p5->Fill(jet_number_eta_over2p5);
 }
 
 
