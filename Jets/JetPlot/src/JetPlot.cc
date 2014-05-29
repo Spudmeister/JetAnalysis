@@ -67,13 +67,17 @@ class JetPlot : public edm::EDAnalyzer {
 
       // ----------member data ---------------------------
       
-      // make counter histogram and pt distrubtion histograms for various criteria
+      // make histograms for various criteria
       TH1D* jet_counter_under20;
       TH1D* jet_pt_under20;
       TH1D* pt_abs_eta_under2p5;
       TH1D* pt_abs_eta_over2p5;
       TH1D* counter_abs_eta_under2p5;
       TH1D* counter_abs_eta_over2p5;
+      TH1D* jet_eta_under2p5;
+      TH1D* jet_phi_over2p5;
+      TH1D* jet_phi_under2p5;
+      TH1D* jet_eta_over2p5;
 };
 
 //
@@ -94,14 +98,18 @@ JetPlot::JetPlot(const edm::ParameterSet& iConfig)
     // This allows us to make plots with file service
     edm::Service<TFileService> fs;
 
-    //makes the jet plots
+    //makes the jet plots with fs
     jet_counter_under20 = fs->make<TH1D>("jetCounts", "jetCounts", 100, 0., 100);
     jet_pt_under20 = fs->make<TH1D>("jetPt", "jetPt", 100, 0., 100);
     pt_abs_eta_under2p5 = fs->make<TH1D>("ptAbsEtaUnder2.5", "ptAbsEtaUnder2.5", 100, 0., 100);
     pt_abs_eta_over2p5 = fs->make<TH1D>("ptAbsEtaOver2.5", "ptAbsEtaOver2.5", 100, 0., 100);
     counter_abs_eta_under2p5 = fs->make<TH1D>("counterAbsEtaUnder2.5", "counterAbsEtaUnder2.5", 100, 0., 100);
     counter_abs_eta_over2p5 = fs->make<TH1D>("counterAbsEtaOver2.5", "counterAbsEtaOver2.5", 100, 0., 100);
-
+    jet_eta_under2p5 = fs->make<TH1D>("EtaDistributionUnder2.5", "EtaDistributionUnder2.5", 20, -10, 10);
+    jet_phi_over2p5 = fs->make<TH1D>("PhiDistributionOver2.5", "PhiDistributionOver2.5", 20, -10, 10);
+    jet_eta_over2p5 = fs->make<TH1D>("EtaDistributionOver2.5", "EtaDistributionOver2.5", 20, -10, 10);
+    jet_phi_under2p5 = fs->make<TH1D>("PhiDistributionUnder2.5", "PhiDistributionUnder2.5", 20, -10, 10);
+    
 }
 
 
@@ -139,12 +147,16 @@ JetPlot::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 	if(fabs (genjet.eta()) > 2.5)
         {
             jet_number_eta_over2p5++;
-
+            pt_abs_eta_over2p5->Fill(genjet.pt());
+            jet_eta_over2p5->Fill(genjet.eta());
+	    jet_phi_over2p5->Fill(genjet.phi());	    
 	}
 	else
 	{
             jet_number_eta_under2p5++;
-
+            pt_abs_eta_under2p5->Fill(genjet.pt());
+            jet_eta_under2p5->Fill(genjet.eta());
+	    jet_phi_under2p5->Fill(genjet.phi());
 	}
 	if(genjet.pt() >= 20)
     	{    
