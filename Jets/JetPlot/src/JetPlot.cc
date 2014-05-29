@@ -105,10 +105,10 @@ JetPlot::JetPlot(const edm::ParameterSet& iConfig)
     pt_abs_eta_over2p5 = fs->make<TH1D>("ptAbsEtaOver2.5", "ptAbsEtaOver2.5", 100, 0., 100);
     counter_abs_eta_under2p5 = fs->make<TH1D>("counterAbsEtaUnder2.5", "counterAbsEtaUnder2.5", 100, 0., 100);
     counter_abs_eta_over2p5 = fs->make<TH1D>("counterAbsEtaOver2.5", "counterAbsEtaOver2.5", 100, 0., 100);
-    jet_eta_under2p5 = fs->make<TH1D>("EtaDistributionUnder2.5", "EtaDistributionUnder2.5", 20, -10, 10);
-    jet_phi_over2p5 = fs->make<TH1D>("PhiDistributionOver2.5", "PhiDistributionOver2.5", 20, -10, 10);
-    jet_eta_over2p5 = fs->make<TH1D>("EtaDistributionOver2.5", "EtaDistributionOver2.5", 20, -10, 10);
-    jet_phi_under2p5 = fs->make<TH1D>("PhiDistributionUnder2.5", "PhiDistributionUnder2.5", 20, -10, 10);
+    jet_eta_under2p5 = fs->make<TH1D>("EtaDistributionUnder2.5", "EtaDistributionUnder2.5", 200, -10, 10);
+    jet_phi_over2p5 = fs->make<TH1D>("PhiDistributionOver2.5", "PhiDistributionOver2.5", 200, -10, 10);
+    jet_eta_over2p5 = fs->make<TH1D>("EtaDistributionOver2.5", "EtaDistributionOver2.5", 200, -10, 10);
+    jet_phi_under2p5 = fs->make<TH1D>("PhiDistributionUnder2.5", "PhiDistributionUnder2.5", 200, -10, 10);
     
 }
 
