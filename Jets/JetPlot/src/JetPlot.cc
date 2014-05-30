@@ -82,6 +82,7 @@ class JetPlot : public edm::EDAnalyzer {
       TH1D* jet_mass_under2p5;
       TH1D* jet_mass_over2p5;
       TH1D* dijet_invmass;
+      
 };
 
 //
@@ -127,6 +128,7 @@ JetPlot::~JetPlot()
 
 }
 
+      
 
 //
 // member functions
@@ -138,6 +140,10 @@ JetPlot::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
     using namespace edm;
 
+    math::PtEtaPhiMLorentzVector diJet;  //makes a lorentz vectors for the two highest jets
+    math::PtEtaPhiMLorentzVector jet1;
+    math::PtEtaPhiMLorentzVector jet2;
+
     // gets jets
     Handle<std::vector<reco::GenJet>> pIn;
     iEvent.getByLabel("ak5GenJets", pIn);
@@ -146,13 +152,23 @@ JetPlot::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     int jet_number_eta_under2p5 = 0;
     int jet_number_eta_over2p5 = 0;
     int jet_number_over20 = 0;
+    float jet1pt = 0.0;
+    float jet2pt = 0.0;
+
     for(unsigned int i = 0; i < pIn->size(); ++i)
     {
 	reco::GenJet genjet = pIn->at(i);
-        
-        jets.fill(genjet.pt());               //Makes an array of all of the jetPt
-        
-        
+
+        if(genjet.pt() > jet1pt)     //Decides the highest and second highest pt jets
+	{
+            jet1pt = genjet.pt();
+	    jet1 = math::PtEtaPhiMLorentzVector(genjet.pt(), genjet.eta(), genjet.phi(), genjet.mass());
+        }
+	else if(genjet.pt() > jet2pt)
+	{
+            jet2pt = genjet.pt();
+	    jet2 = math::PtEtaPhiMLorentzVector(genjet.pt(), genjet.eta(), genjet.phi(), genjet.mass());
+    	}
         
         if(fabs (genjet.eta()) > 2.5)
         {
@@ -176,6 +192,8 @@ JetPlot::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     	    jet_pt_over20->Fill(genjet.pt());
         }
     }
+    diJet = jet1 + jet2;
+    dijet_invmass->Fill(diJet.mass());
     jet_counter_over20->Fill(jet_number_over20);
     counter_abs_eta_under2p5->Fill(jet_number_eta_under2p5);
     counter_abs_eta_over2p5->Fill(jet_number_eta_over2p5);
