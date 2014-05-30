@@ -40,8 +40,9 @@
 // Root Library
 #include "TH1D.h"
 
-// CMath
+// C libraries
 #include <cmath>
+#include <algorithm>
 
 //
 // class declaration
@@ -68,8 +69,8 @@ class JetPlot : public edm::EDAnalyzer {
       // ----------member data ---------------------------
       
       // make histograms for various criteria
-      TH1D* jet_counter_under20;
-      TH1D* jet_pt_under20;
+      TH1D* jet_counter_over20;                   //number of jets in an event with 
+      TH1D* jet_pt_over20;
       TH1D* pt_abs_eta_under2p5;
       TH1D* pt_abs_eta_over2p5;
       TH1D* counter_abs_eta_under2p5;
@@ -80,6 +81,7 @@ class JetPlot : public edm::EDAnalyzer {
       TH1D* jet_eta_over2p5;
       TH1D* jet_mass_under2p5;
       TH1D* jet_mass_over2p5;
+      TH1D* dijet_invmass;
 };
 
 //
@@ -101,8 +103,8 @@ JetPlot::JetPlot(const edm::ParameterSet& iConfig)
     edm::Service<TFileService> fs;
 
     //makes the jet plots with fs
-    jet_counter_under20 = fs->make<TH1D>("jetCounts", "jetCounts", 100, 0., 100);
-    jet_pt_under20 = fs->make<TH1D>("jetPt", "jetPt", 100, 0., 100);
+    jet_counter_over20 = fs->make<TH1D>("jetCounts", "jetCounts", 100, 0., 100);
+    jet_pt_over20 = fs->make<TH1D>("jetPt", "jetPt", 100, 0., 100);
     pt_abs_eta_under2p5 = fs->make<TH1D>("ptAbsEtaUnder2.5", "ptAbsEtaUnder2.5", 100, 0., 100);
     pt_abs_eta_over2p5 = fs->make<TH1D>("ptAbsEtaOver2.5", "ptAbsEtaOver2.5", 100, 0., 100);
     counter_abs_eta_under2p5 = fs->make<TH1D>("counterAbsEtaUnder2.5", "counterAbsEtaUnder2.5", 100, 0., 100);
@@ -113,6 +115,7 @@ JetPlot::JetPlot(const edm::ParameterSet& iConfig)
     jet_phi_under2p5 = fs->make<TH1D>("PhiDistributionUnder2.5", "PhiDistributionUnder2.5", 200, -10, 10);
     jet_mass_under2p5 = fs->make<TH1D>("JetMassUnder2.5", "JetMassUnder2.5", 1000, 0., 100);
     jet_mass_over2p5 = fs->make<TH1D>("JetMassOver2.5", "JetMassOver2.5", 1000, 0., 100);
+    dijet_invmass = fs->make<TH1D>("InvariantDijetMass", "InvariantDijetMass", 1000, 0., 1000);
 }
 
 
@@ -139,15 +142,16 @@ JetPlot::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     Handle<std::vector<reco::GenJet>> pIn;
     iEvent.getByLabel("ak5GenJets", pIn);
     // Finds the two biggest jets in the event
-   
+    for(unsigned int j = 0; j < pIn->size(); ++j)
+    {
+       
 
 
-
-
+    }
     // loops over events and fills plots
     int jet_number_eta_under2p5 = 0;
     int jet_number_eta_over2p5 = 0;
-    int jet_number_under20 = 0;
+    int jet_number_over20 = 0;
     for(unsigned int i = 0; i < pIn->size(); ++i)
     {
 	reco::GenJet genjet = pIn->at(i);
@@ -169,11 +173,11 @@ JetPlot::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 	}
 	if(genjet.pt() >= 20)
     	{    
-	    jet_number_under20++;
-    	    jet_pt_under20->Fill(genjet.pt());
+	    jet_number_over20++;
+    	    jet_pt_over20->Fill(genjet.pt());
         }
     }
-    jet_counter_under20->Fill(jet_number_under20);
+    jet_counter_over20->Fill(jet_number_over20);
     counter_abs_eta_under2p5->Fill(jet_number_eta_under2p5);
     counter_abs_eta_over2p5->Fill(jet_number_eta_over2p5);
 }
