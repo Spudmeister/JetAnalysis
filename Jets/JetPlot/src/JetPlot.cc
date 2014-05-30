@@ -169,8 +169,8 @@ JetPlot::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
             jet2pt = genjet.pt();
 	    jet2 = math::PtEtaPhiMLorentzVector(genjet.pt(), genjet.eta(), genjet.phi(), genjet.mass());
     	}
-        
-        if(fabs (genjet.eta()) > 2.5)
+        //Checks if the absolute value of eta is over or under 2.5            
+	if(fabs (genjet.eta()) > 2.5)
         {
             jet_number_eta_over2p5++;
             pt_abs_eta_over2p5->Fill(genjet.pt());
@@ -186,7 +186,8 @@ JetPlot::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 	    jet_phi_under2p5->Fill(genjet.phi());
 	    jet_mass_under2p5->Fill(genjet.mass());
 	}
-	if(genjet.pt() >= 20)
+        //Checks if the jets have at least 20GeV pt
+        if(genjet.pt() >= 20)
     	{    
 	    jet_number_over20++;
     	    jet_pt_over20->Fill(genjet.pt());
