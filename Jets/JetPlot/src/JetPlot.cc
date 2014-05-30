@@ -141,13 +141,7 @@ JetPlot::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     // gets jets
     Handle<std::vector<reco::GenJet>> pIn;
     iEvent.getByLabel("ak5GenJets", pIn);
-    // Finds the two biggest jets in the event
-    for(unsigned int j = 0; j < pIn->size(); ++j)
-    {
-       
-
-
-    }
+    
     // loops over events and fills plots
     int jet_number_eta_under2p5 = 0;
     int jet_number_eta_over2p5 = 0;
@@ -155,7 +149,12 @@ JetPlot::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     for(unsigned int i = 0; i < pIn->size(); ++i)
     {
 	reco::GenJet genjet = pIn->at(i);
-	if(fabs (genjet.eta()) > 2.5)
+        
+        jets.fill(genjet.pt());               //Makes an array of all of the jetPt
+        
+        
+        
+        if(fabs (genjet.eta()) > 2.5)
         {
             jet_number_eta_over2p5++;
             pt_abs_eta_over2p5->Fill(genjet.pt());
