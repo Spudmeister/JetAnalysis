@@ -78,6 +78,8 @@ class JetPlot : public edm::EDAnalyzer {
       TH1D* jet_phi_over2p5;
       TH1D* jet_phi_under2p5;
       TH1D* jet_eta_over2p5;
+      TH1D* jet_mass_under2p5;
+      TH1D* jet_mass_over2p5;
 };
 
 //
@@ -109,7 +111,8 @@ JetPlot::JetPlot(const edm::ParameterSet& iConfig)
     jet_phi_over2p5 = fs->make<TH1D>("PhiDistributionOver2.5", "PhiDistributionOver2.5", 200, -10, 10);
     jet_eta_over2p5 = fs->make<TH1D>("EtaDistributionOver2.5", "EtaDistributionOver2.5", 200, -10, 10);
     jet_phi_under2p5 = fs->make<TH1D>("PhiDistributionUnder2.5", "PhiDistributionUnder2.5", 200, -10, 10);
-    
+    jet_mass_under2p5 = fs->make<TH1D>("JetMassUnder2.5", "JetMassUnder2.5", 1000, 0., 1000);
+    jet_mass_over2p5 = fs->make<TH1D>("JetMassOver2.5", "JetMassOver2.5", 1000, 0., 1000);
 }
 
 
@@ -149,7 +152,8 @@ JetPlot::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
             jet_number_eta_over2p5++;
             pt_abs_eta_over2p5->Fill(genjet.pt());
             jet_eta_over2p5->Fill(genjet.eta());
-	    jet_phi_over2p5->Fill(genjet.phi());	    
+	    jet_phi_over2p5->Fill(genjet.phi());
+	    jet_mass_over2p5->Fill(genjet.mass());
 	}
 	else
 	{
@@ -157,6 +161,7 @@ JetPlot::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
             pt_abs_eta_under2p5->Fill(genjet.pt());
             jet_eta_under2p5->Fill(genjet.eta());
 	    jet_phi_under2p5->Fill(genjet.phi());
+	    jet_mass_under2p5->Fill(genjet.mass());
 	}
 	if(genjet.pt() >= 20)
     	{    
