@@ -111,8 +111,8 @@ JetPlot::JetPlot(const edm::ParameterSet& iConfig)
     jet_phi_over2p5 = fs->make<TH1D>("PhiDistributionOver2.5", "PhiDistributionOver2.5", 200, -10, 10);
     jet_eta_over2p5 = fs->make<TH1D>("EtaDistributionOver2.5", "EtaDistributionOver2.5", 200, -10, 10);
     jet_phi_under2p5 = fs->make<TH1D>("PhiDistributionUnder2.5", "PhiDistributionUnder2.5", 200, -10, 10);
-    jet_mass_under2p5 = fs->make<TH1D>("JetMassUnder2.5", "JetMassUnder2.5", 1000, 0., 1000);
-    jet_mass_over2p5 = fs->make<TH1D>("JetMassOver2.5", "JetMassOver2.5", 1000, 0., 1000);
+    jet_mass_under2p5 = fs->make<TH1D>("JetMassUnder2.5", "JetMassUnder2.5", 1000, 0., 100);
+    jet_mass_over2p5 = fs->make<TH1D>("JetMassOver2.5", "JetMassOver2.5", 1000, 0., 100);
 }
 
 
@@ -138,9 +138,13 @@ JetPlot::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     // gets jets
     Handle<std::vector<reco::GenJet>> pIn;
     iEvent.getByLabel("ak5GenJets", pIn);
+    // Finds the two biggest jets in the event
+   
+
+
+
 
     // loops over events and fills plots
-
     int jet_number_eta_under2p5 = 0;
     int jet_number_eta_over2p5 = 0;
     int jet_number_under20 = 0;
