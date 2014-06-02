@@ -157,20 +157,27 @@ JetPlot::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 
     for(unsigned int i = 0; i < pIn->size(); ++i)
     {
-	reco::GenJet genjet = pIn->at(i);
+        reco::GenJet genjet = pIn->at(i);
 
         if(genjet.pt() > jet1pt)     //Decides the highest and second highest pt jets
-	{
+        {
             jet1pt = genjet.pt();
-	    jet1 = math::PtEtaPhiMLorentzVector(genjet.pt(), genjet.eta(), genjet.phi(), genjet.mass());
+            jet1 = math::PtEtaPhiMLorentzVector(genjet.pt(), genjet.eta(), genjet.phi(), genjet.mass());
         }
-	else if(genjet.pt() > jet2pt)
-	{
+        else if(genjet.pt() > jet2pt)
+        {
             jet2pt = genjet.pt();
-	    jet2 = math::PtEtaPhiMLorentzVector(genjet.pt(), genjet.eta(), genjet.phi(), genjet.mass());
-    	}
+            jet2 = math::PtEtaPhiMLorentzVector(genjet.pt(), genjet.eta(), genjet.phi(), genjet.mass());
+        }
+        diJet = jet1 + jet2;
+        //Now that I have the two highest pt jets I can make some cuts on them
+        if(jet1.pt() > 50 and jet2.pt() > 25)  //its a good jet
+        {
+       
+        }
+
         //Checks if the absolute value of eta is over or under 2.5            
-	if(fabs (genjet.eta()) > 2.5)
+ 	if(fabs (genjet.eta()) > 2.5)
         {
             jet_number_eta_over2p5++;
             pt_abs_eta_over2p5->Fill(genjet.pt());
@@ -193,7 +200,7 @@ JetPlot::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     	    jet_pt_over20->Fill(genjet.pt());
         }
     }
-    diJet = jet1 + jet2;
+    
     dijet_invmass->Fill(diJet.mass());
     jet_counter_over20->Fill(jet_number_over20);
     counter_abs_eta_under2p5->Fill(jet_number_eta_under2p5);
