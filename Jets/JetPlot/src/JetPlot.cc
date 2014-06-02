@@ -154,6 +154,11 @@ JetPlot::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     int jet_number_over20 = 0;
     float jet1pt = 0.0;
     float jet2pt = 0.0;
+    bool cutPt;
+    bool cutInside;
+    bool cutIsolation;
+    bool cutSpread;
+    bool cutHemi;
 
     for(unsigned int i = 0; i < pIn->size(); ++i)
     {
@@ -174,23 +179,23 @@ JetPlot::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 	//Now that I have the two highest pt jets I can make some cuts on them based on the Dubinin2006 paper
         if(jet1.pt() > 20 and jet2.pt() > 20)  //At least some jet energy
         {
-       
+            cutPt = true;
         }
         if(fabs (jet1.eta()) <= 4.5 and fabs (jet2.eta()) <= 4.5)   //Jets well inside detector (but not in HF I guess)
 	{
-
+            cutInside = true;
 	}
 	if(/*Separation between jets and gammas */true/*until I know what to write*/)
 	{
-
+            cutIsolation = true;
 	}
 	if(fabs (jet1.eta()-jet2.eta()) >= 4.0)    //Jets are far apart in eta
 	{
-
+            cutSpread = true;
 	}
 	if(jet1.eta()*jet2.eta() < 0)    //They are in opposite hemispheres
 	{
-
+            cutHemi = true;
 	}
 
         //Checks if the absolute value of eta is over or under 2.5            
