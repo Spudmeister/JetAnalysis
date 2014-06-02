@@ -170,11 +170,28 @@ JetPlot::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
             jet2 = math::PtEtaPhiMLorentzVector(genjet.pt(), genjet.eta(), genjet.phi(), genjet.mass());
         }
         diJet = jet1 + jet2;
-        //Now that I have the two highest pt jets I can make some cuts on them
-        if(jet1.pt() > 50 and jet2.pt() > 25)  //its a good jet
+        
+	//Now that I have the two highest pt jets I can make some cuts on them based on the Dubinin2006 paper
+        if(jet1.pt() > 20 and jet2.pt() > 20)  //At least some jet energy
         {
        
         }
+        if(fabs (jet1.eta()) <= 4.5 and fabs (jet2.eta()) <= 4.5)   //Jets well inside detector (but not in HF I guess)
+	{
+
+	}
+	if(/*Separation between jets and gammas */true/*until I know what to write*/)
+	{
+
+	}
+	if(fabs (jet1.eta()-jet2.eta()) >= 4.0)    //Jets are far apart in eta
+	{
+
+	}
+	if(jet1.eta()*jet2.eta() < 0)    //They are in opposite hemispheres
+	{
+
+	}
 
         //Checks if the absolute value of eta is over or under 2.5            
  	if(fabs (genjet.eta()) > 2.5)
